@@ -2,6 +2,7 @@ group 'org.ishausa.publishing'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'application'
 apply plugin: 'idea'
 
 repositories {
@@ -18,3 +19,13 @@ dependencies {
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
+
+// Steps to make a spark app deploy in heroku is based on
+// https://www.learnhowtoprogram.com/java/web-applications-in-java/optional-deploying-spark-applications-to-heroku
+
+mainClassName = 'org.ishausa.publishing.newsletter.PublishingTool'
+applicationName = 'isha-newsletter'
+
+defaultTasks = ['clean']
+task stage(dependsOn: ['clean', 'installDist'])
+

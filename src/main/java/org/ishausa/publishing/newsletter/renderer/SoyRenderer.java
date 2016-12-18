@@ -87,6 +87,11 @@ public class SoyRenderer {
     }
 
     public String renderResponsiveEmail(final EmailTemplate template, final Map<String, ?> data) {
-        return responsiveEmailTofu.newRenderer(template.toString()).setData(data).render();
+        return removeBackgroundColorTransformer(
+                responsiveEmailTofu.newRenderer(template.toString()).setData(data).render());
+    }
+
+    private String removeBackgroundColorTransformer(final String content) {
+        return content.replace("background-color: #ffffff;", "");
     }
 }

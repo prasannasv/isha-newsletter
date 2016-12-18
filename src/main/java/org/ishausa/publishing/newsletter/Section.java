@@ -11,23 +11,23 @@ import java.util.List;
  * Broad category of items in a newsletter.
  * Created by tosri on 12/4/2016.
  */
-public class Section {
+class Section {
     private final StandardSection sectionType;
     private final List<Item> items = new LinkedList<>();
 
-    public Section(final StandardSection sectionType) {
+    Section(final StandardSection sectionType) {
         this.sectionType = sectionType;
     }
 
-    public void addItem(final Item item) {
+    void addItem(final Item item) {
         items.add(item);
     }
 
-    public boolean isEmpty() {
+    boolean isEmpty() {
         return items.isEmpty();
     }
 
-    public void printForWordpress(final PrintWriter writer) {
+    void printForWordpress(final PrintWriter writer) {
         writeSectionTitle(writer);
         for (final Item item : items) {
             item.printForWordpress(writer, sectionType.isAccordion());
@@ -35,14 +35,25 @@ public class Section {
     }
 
     private void writeSectionTitle(final PrintWriter writer) {
-        writer.println(SoyRenderer.INSTANCE.renderWordpress(SoyRenderer.Template.SECTION_HEADING,
+        writer.println(SoyRenderer.INSTANCE.renderWordpress(SoyRenderer.WordpressTemplate.SECTION_HEADING,
                 ImmutableMap.of("anchorId", sectionType.getAnchorId(),
                         "heading", sectionType.getHeading())));
     }
 
-    public void printForEmail(final PrintWriter writer) {
+    void printForEmail(final PrintWriter writer, final boolean isWhiteBackground, final String newsletterLink) {
+        writeSectionTitleForEmail(writer, isWhiteBackground);
         for (final Item item : items) {
-            item.printForEmail(writer);
+            item.printForEmail(writer, isWhiteBackground, getLinkWithAnchor(newsletterLink));
         }
+    }
+
+    private void writeSectionTitleForEmail(final PrintWriter writer, final boolean isWhiteBackground) {
+        writer.println(SoyRenderer.INSTANCE.renderResponsiveEmail(SoyRenderer.EmailTemplate.CONTENT_SECTION_TITLE,
+                ImmutableMap.of("sectionTitle", sectionType.getHeading(),
+                        "isWhiteBackground", isWhiteBackground)));
+    }
+
+    private String getLinkWithAnchor(final String newsletterLink) {
+        return newsletterLink + "#" + sectionType.getAnchorId();
     }
 }

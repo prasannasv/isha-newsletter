@@ -1,12 +1,17 @@
 package org.ishausa.publishing.newsletter;
 
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableMap;
 import org.ishausa.publishing.newsletter.renderer.SoyRenderer;
 import spark.Request;
 import spark.Response;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import static spark.Spark.exception;
@@ -28,7 +33,7 @@ public class PublishingTool {
         port(Integer.parseInt(System.getenv("PORT")));
         staticFiles.location("/static");
 
-        get("/", (req, res) -> SoyRenderer.INSTANCE.render(SoyRenderer.Template.INDEX));
+        get("/", (req, res) -> SoyRenderer.INSTANCE.render(SoyRenderer.PublishingToolTemplate.INDEX, new HashMap<>()));
 
         post("/", PublishingTool::handlePost);
 
@@ -44,17 +49,30 @@ public class PublishingTool {
         final Newsletter newsletter = NEWSLETTER_CREATOR.parseToNewsletter(content);
 
         // Dump the html content of the Newsletter for wordpress
-        final PrintWriter printWriter = new PrintWriter(response.raw().getOutputStream());
-        newsletter.printForWordpress(printWriter);
+        final File wordpressFile = new File("wordpress.html");
+        {
+            final PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(wordpressFile)));
+            newsletter.printForWordpress(writer);
+            writer.close();
+        }
+        log.info("Wordpress html written to " + wordpressFile.getAbsolutePath());
 
         // Dump it for email
-        newsletter.printForEmail(printWriter);
+        final File emailFile = new File("email.html");
+        {
+            final PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(emailFile)));
+            newsletter.printForEmail(writer);
+            writer.close();
+        }
+        log.info("Email html written to " + emailFile.getAbsolutePath());
 
         // for debugging
         final StringWriter buffer = new StringWriter();
         newsletter.printForWordpress(new PrintWriter(buffer));
         log.info("Wordpress Contents: " + buffer);
 
-        return buffer.toString();
+        return SoyRenderer.INSTANCE.render(SoyRenderer.PublishingToolTemplate.OUTPUT_LINK,
+                ImmutableMap.of("wordpressFile", wordpressFile.getAbsolutePath(),
+                        "emailFile", emailFile.getAbsolutePath()));
     }
 }

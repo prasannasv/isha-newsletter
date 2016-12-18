@@ -13,20 +13,23 @@
 /**
  * Creates a video section for a youtube link
  * @param videoId the id of the youtube video link
+ * @param? htmlContent the optional content that goes with the video
  */
-{template .video_youtube}
+{template .video_youtube autoescape="deprecated-contextual"}
 <center>
 [su_youtube url="https://www.youtube.com/watch?v={$videoId}" width="640" height="480"]
+{$htmlContent|noAutoescape}
 </center>
 {/template}
 
 /**
  * Creates a video section for a facebook link
  * @param encodedUrl the url encoded video url in facebook (eg., https%3A%2F%2Fwww.facebook.com%2Fsadhguru%2Fvideos%2F10154274952194146%2F)
+ * @param? htmlContent the optional content that goes with the video
  */
-{template .video_facebook}
+{template .video_facebook autoescape="deprecated-contextual"}
 <center>
-<iframe src="https://www.facebook.com/plugins/video.php?href={$encodedUrl}&width=640&show_text=false&height=345&appId"
+<iframe src="https://www.facebook.com/plugins/video.php?href={$encodedUrl}{literal}&width=640&show_text=false&height=345&appId{/literal}"
     width="640" height="345"
     style="border:none;overflow:hidden"
     scrolling="no"
@@ -34,6 +37,7 @@
     allowTransparency="true">
 </iframe>
 </center>
+{$htmlContent|noAutoescape}
 {/template}
 
 /**

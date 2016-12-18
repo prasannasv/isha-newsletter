@@ -46,8 +46,14 @@
     <div class="container">
       <div class="starter-template">
         <form action="/" method="POST">
+            <h2>Newsletter Meta Info</h2>
+            <label>Title: </label><input type="text" name="title">
+            <label>Date: </label><input type="text" name="date" value="yyyy-mm-dd">
+            <hr>
+
             <h2>Video Link</h2>
             <input type="text" name="video">
+            <textarea name="video-full">Paste the full contents here</textarea>
             <hr>
 
             <h2>Adiyogi Updates</h2>
@@ -128,4 +134,48 @@
     <script>{literal}tinymce.init({ selector:'textarea' });{/literal}</script>
   </body>
 </html>
+{/template}
+
+
+/**
+ * Output links to files with wordpress and email html content.
+ *
+ * @param wordpressFile - file path to wordpress content.
+ * @param emailFile - file path to html email content.
+ */
+{template .output_link}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Newsletter Publishing Tool</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+  <section class="container">
+  <table class="table table-striped">
+    <tr>
+      <th>Type</th>
+      <th>Path</th>
+    </tr>
+    {call .outputSnippet}
+      {param type: 'Wordpress' /}
+      {param file: $wordpressFile /}
+    {/call}
+    {call .outputSnippet}
+      {param type: 'Email' /}
+      {param file: $emailFile /}
+    {/call}
+  </table>
+  </section>
+</body>
+</html>
+{/template}
+
+{template .outputSnippet}
+  {@param type: string}
+  {@param file: string}
+    <tr>
+      <td>{$type}</td>
+      <td><a href="file:///{$file}" target="_blank">{$file}</a></td>
+    </tr>
 {/template}

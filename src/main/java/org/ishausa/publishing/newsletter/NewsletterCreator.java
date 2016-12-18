@@ -33,8 +33,9 @@ class NewsletterCreator {
 
     private void addVideo(final Newsletter newsletter, final Map<String, List<String>> params) {
         final String videoLink = params.get(StandardSection.VIDEO.toString().toLowerCase()).get(0);
+        final String videoContent = params.get(StandardSection.VIDEO.toString().toLowerCase() + "-full").get(0);
 
-        newsletter.addSection(VideoLinks.createSection(videoLink));
+        newsletter.addSection(VideoLinks.createSection(videoLink, videoContent));
     }
 
     private void addSection(final Newsletter newsletter,

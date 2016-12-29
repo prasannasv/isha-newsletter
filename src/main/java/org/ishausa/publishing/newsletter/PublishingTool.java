@@ -39,6 +39,8 @@ public class PublishingTool {
 
         exception(Exception.class, ((exception, request, response) -> {
             log.info("Exception: " + exception + " stack: " + Throwables.getStackTraceAsString(exception));
+            response.status(500);
+            response.body("Exception: " + exception + " stack: " + Throwables.getStackTraceAsString(exception));
         }));
     }
 

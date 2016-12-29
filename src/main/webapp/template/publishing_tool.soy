@@ -154,8 +154,7 @@
   <section class="container">
   <table class="table table-striped">
     <tr>
-      <th>Type</th>
-      <th>Path</th>
+      <th style="text-align: center;">Download</th>
     </tr>
     {call .outputSnippet}
       {param type: 'Wordpress' /}
@@ -175,7 +174,6 @@
   {@param type: string}
   {@param file: string}
     <tr>
-      <td>{$type}</td>
-      <td><a href="file:///{$file}" target="_blank">{$file}</a></td>
+      <td style="text-align: center;"><a href="{$file}" target="_blank">{$type}</a></td>
     </tr>
 {/template}

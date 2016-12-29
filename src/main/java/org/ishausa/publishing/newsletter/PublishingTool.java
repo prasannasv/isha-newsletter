@@ -5,12 +5,13 @@ import com.google.common.collect.ImmutableMap;
 import org.ishausa.publishing.newsletter.renderer.SoyRenderer;
 import spark.Request;
 import spark.Response;
+import spark.utils.IOUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -29,11 +30,17 @@ public class PublishingTool {
 
     private static final NewsletterCreator NEWSLETTER_CREATOR = new NewsletterCreator();
 
+    private static final String WORDPRESS_FILE_NAME = "wordpress.html";
+    private static final String EMAIL_FILE_NAME = "email.html";
+
     public static void main(final String[] args) {
         port(Integer.parseInt(System.getenv("PORT")));
         staticFiles.location("/static");
 
         get("/", (req, res) -> SoyRenderer.INSTANCE.render(SoyRenderer.PublishingToolTemplate.INDEX, new HashMap<>()));
+
+        get(WORDPRESS_FILE_NAME, (req, res) -> IOUtils.toString(new FileInputStream(new File(WORDPRESS_FILE_NAME))));
+        get(EMAIL_FILE_NAME, (req, res) -> IOUtils.toString(new FileInputStream(new File(EMAIL_FILE_NAME))));
 
         post("/", PublishingTool::handlePost);
 
@@ -51,7 +58,7 @@ public class PublishingTool {
         final Newsletter newsletter = NEWSLETTER_CREATOR.parseToNewsletter(content);
 
         // Dump the html content of the Newsletter for wordpress
-        final File wordpressFile = new File("wordpress.html");
+        final File wordpressFile = new File(WORDPRESS_FILE_NAME);
         {
             final PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(wordpressFile)));
             newsletter.printForWordpress(writer);
@@ -60,7 +67,7 @@ public class PublishingTool {
         log.info("Wordpress html written to " + wordpressFile.getAbsolutePath());
 
         // Dump it for email
-        final File emailFile = new File("email.html");
+        final File emailFile = new File(EMAIL_FILE_NAME);
         {
             final PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(emailFile)));
             newsletter.printForEmail(writer);
@@ -68,13 +75,8 @@ public class PublishingTool {
         }
         log.info("Email html written to " + emailFile.getAbsolutePath());
 
-        // for debugging
-        final StringWriter buffer = new StringWriter();
-        newsletter.printForWordpress(new PrintWriter(buffer));
-        log.info("Wordpress Contents: " + buffer);
-
         return SoyRenderer.INSTANCE.render(SoyRenderer.PublishingToolTemplate.OUTPUT_LINK,
-                ImmutableMap.of("wordpressFile", wordpressFile.getAbsolutePath(),
-                        "emailFile", emailFile.getAbsolutePath()));
+                ImmutableMap.of("wordpressFile", wordpressFile.getName(),
+                        "emailFile", emailFile.getName()));
     }
 }

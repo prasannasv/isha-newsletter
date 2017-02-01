@@ -41,7 +41,7 @@ class Section {
     }
 
     void printForEmail(final PrintWriter writer, final boolean isWhiteBackground, final String newsletterLink) {
-        // writeSectionTitleForEmail(writer, isWhiteBackground);
+        writeSectionTitleForEmail(writer, isWhiteBackground);
         for (final Item item : items) {
             item.printForEmail(writer, isWhiteBackground, getLinkWithAnchor(newsletterLink));
         }

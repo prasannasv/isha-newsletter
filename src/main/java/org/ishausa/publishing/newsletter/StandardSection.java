@@ -4,8 +4,12 @@ package org.ishausa.publishing.newsletter;
  * Created by tosri on 12/4/2016.
  */
 public enum StandardSection {
+    /*
+     * The names here have a reference in the publishing_tool.soy in lower case.
+     * If you rename this, be sure to update there as well.
+     */
     VIDEO("This weeks video", "video", false /* isAccordion */),
-    ADIYOGI_UPDATES("Adiyogi Updates", "adiyogi"),
+    ABODE_HAPPENINGS("Abode Happenings", "adiyogi"),
     ARTICLE("Article", "article"),
     NEWS("New Announcements", "news"),
     VOLUNTEERING("Volunteering Opportunities", "volunteer"),

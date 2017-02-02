@@ -28,9 +28,11 @@ class Section {
     }
 
     void printForWordpress(final PrintWriter writer) {
-        writeSectionTitle(writer);
-        for (final Item item : items) {
-            item.printForWordpress(writer, sectionType.isAccordion());
+        if (!sectionType.isEmailOnly()) {
+            writeSectionTitle(writer);
+            for (final Item item : items) {
+                item.printForWordpress(writer, sectionType.isAccordion());
+            }
         }
     }
 
@@ -41,9 +43,11 @@ class Section {
     }
 
     void printForEmail(final PrintWriter writer, final boolean isWhiteBackground, final String newsletterLink) {
-        writeSectionTitleForEmail(writer, isWhiteBackground);
-        for (final Item item : items) {
-            item.printForEmail(writer, isWhiteBackground, getLinkWithAnchor(newsletterLink));
+        if (!sectionType.isWebOnly()) {
+            writeSectionTitleForEmail(writer, isWhiteBackground);
+            for (final Item item : items) {
+                item.printForEmail(writer, isWhiteBackground, getLinkWithAnchor(newsletterLink));
+            }
         }
     }
 

@@ -1,6 +1,9 @@
 {namespace org.ishausa.publishing.newsletter}
 /**
  * Newsletter Publishing Tool Home Page.
+ *
+ * @param standardSections - list of standardSection.
+ *  where standardSection -> {name: string, heading: string, hasNoTitle: bool, isEmailOnly: bool, isWebOnly: bool, isEmailAndWebSame: bool}
  */
 {template .index}
 <!DOCTYPE html>
@@ -48,67 +51,24 @@
         <form action="/" method="POST">
             <h2>Newsletter Meta Info</h2>
             <label>Title: </label><input type="text" name="title">
-            <label>Date: </label><input type="text" name="date" value="yyyy-mm-dd">
+            <label>Date: </label><input type="text" name="date" placeholder="yyyy-mm-dd">
             <hr>
 
-            <h2>Video Link</h2>
-            <input type="text" name="video">
-            <textarea name="video-full">Paste the full contents here</textarea>
-            <hr>
+            {foreach $standardSection in $standardSections}
+              <h2>{$standardSection['heading']}</h2>
+              {if not $standardSection['hasNoTitle']}
+                <label>Title: </label><input type="text" name="{$standardSection['name']}-title" placeholder="{$standardSection['heading']}">
+              {/if}
 
-            <h2>Abode Happenings</h2>
-            <label>Title: </label><input type="text" name="abode_happenings-title">
-            <textarea name="abode_happenings-full">Paste the full contents here</textarea>
-            <hr>
+              {if not $standardSection['isWebOnly'] and not $standardSection['isEmailAndWebSame']}
+                <textarea name="{$standardSection['name']}-summary">Paste the email contents here</textarea>
+              {/if}
 
-            <h2>Article</h2>
-            <label>Title: </label><input type="text" name="article-title">
-            <textarea name="article-full">Paste the full contents here</textarea>
-            <hr>
-
-            <h2>New Announcements</h2>
-            <h3>Photo Highlights</h3>
-            <label>Title: </label><input type="text" name="news-title" value="Photo Highlights">
-            <textarea name="news-full">Paste the full contents here</textarea>
-            <h3>News One</h3>
-            <label>Title: </label><input type="text" name="news-title"><br>
-            <textarea name="news-full">Paste the full contents here</textarea><br>
-            <h3>News Two</h3>
-            <label>Title: </label><input type="text" name="news-title"><br>
-            <textarea name="news-full">Paste the full contents here</textarea><br>
-            <h3>Isha in the News...</h3>
-            <label>Title: </label><input type="text" name="news-title" value="Isha in the News..."><br>
-            <textarea name="news-full">Paste the full contents here</textarea>
-            <hr>
-
-            <h2>Volunteering Opportunities</h2>
-            <textarea name="volunteering-full">Paste the full contents here</textarea>
-            <hr>
-
-            <h2>Programs</h2>
-            <h3>Programs at Isha Institute of Inner-sciences (iii)</h3>
-            <label>Title: </label><input type="text" name="programs-title" value="Programs at Isha Institute of Inner-sciences (iii)"><br>
-            <textarea name="programs-full">Paste the full contents here</textarea>
-            <h3>Programs in the City Centers across US and Canada</h3>
-            <label>Title: </label><input type="text" name="programs-title" value="Programs in the City Centers across US and Canada"><br>
-            <textarea name="programs-full">Paste the full contents here</textarea>
-            <h3>Live in a Consecrated Space</h3>
-            <label>Title: </label><input type="text" name="programs-title" value="Live in a Consecrated Space"><br>
-            <textarea name="programs-full">Paste the full contents here</textarea>
-            <h3>International Schedule</h3>
-            <label>Title: </label><input type="text" name="programs-title" value="International Schedule"><br>
-            <textarea name="programs-full">Paste the full contents here</textarea>
-            <hr>
-
-            <h2>Sharing</h2>
-            <label>Title: </label><input type="text" name="sharing-title"><br>
-            <textarea name="sharing-full">Paste the full contents here</textarea>
-            <hr>
-
-            <h2>Life Style</h2>
-            <label>Title: </label><input type="text" name="lifestyle-title"><br>
-            <textarea name="lifestyle-full">Paste the full contents here</textarea>
-            <hr>
+              {if not $standardSection['isEmailOnly']}
+                <textarea name="{$standardSection['name']}-full">Paste the full contents here</textarea>
+              {/if}
+              <hr>
+            {/foreach}
 
             <input type="submit" value="Submit">
         </form>

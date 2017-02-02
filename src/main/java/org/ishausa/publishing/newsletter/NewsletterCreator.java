@@ -28,8 +28,6 @@ class NewsletterCreator {
         final Newsletter newsletter = new Newsletter(getSingleParamOrFail(paramsMap, TITLE_PARAM),
                 getSingleParamOrFail(paramsMap, DATE_PARAM));
 
-        addVideo(newsletter, paramsMap);
-
         for (final StandardSection sectionType : StandardSection.values()) {
             addSection(newsletter, sectionType, paramsMap);
         }
@@ -46,7 +44,7 @@ class NewsletterCreator {
     }
 
     private void addVideo(final Newsletter newsletter, final Map<String, List<String>> params) {
-        final String videoLink = params.get(StandardSection.VIDEO.toString().toLowerCase()).get(0);
+        final String videoLink = params.get(StandardSection.VIDEO.toString().toLowerCase() + "-title").get(0);
         final String videoContent = params.get(StandardSection.VIDEO.toString().toLowerCase() + "-full").get(0);
 
         newsletter.addSection(VideoLinks.createSection(videoLink, videoContent, newsletter.getWordpressLink()));
@@ -55,6 +53,11 @@ class NewsletterCreator {
     private void addSection(final Newsletter newsletter,
                             final StandardSection sectionType,
                             final Map<String, List<String>> params) {
+        if (sectionType.equals(StandardSection.VIDEO)) {
+            addVideo(newsletter, params);
+            return;
+        }
+
         final String queryParamPrefix = sectionType.toString().toLowerCase() + "-";
         final String titleParam = queryParamPrefix + "title";
         final String fullContentParam = queryParamPrefix + "full";

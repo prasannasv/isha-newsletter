@@ -12,7 +12,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.util.HashMap;
 import java.util.logging.Logger;
 
 import static spark.Spark.exception;
@@ -37,7 +36,8 @@ public class PublishingTool {
         port(Integer.parseInt(System.getenv("PORT")));
         staticFiles.location("/static");
 
-        get("/", (req, res) -> SoyRenderer.INSTANCE.render(SoyRenderer.PublishingToolTemplate.INDEX, new HashMap<>()));
+        get("/", (req, res) ->
+                SoyRenderer.INSTANCE.render(SoyRenderer.PublishingToolTemplate.INDEX, StandardSection.getSoyMapData()));
 
         get(WORDPRESS_FILE_NAME, (req, res) -> IOUtils.toString(new FileInputStream(new File(WORDPRESS_FILE_NAME))));
         get(EMAIL_FILE_NAME, (req, res) -> IOUtils.toString(new FileInputStream(new File(EMAIL_FILE_NAME))));

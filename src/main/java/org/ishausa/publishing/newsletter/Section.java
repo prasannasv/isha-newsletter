@@ -27,12 +27,18 @@ class Section {
         return items.isEmpty();
     }
 
+    boolean shouldSkipForWeb() {
+        return sectionType.isEmailOnly();
+    }
+
+    boolean shouldSkipForEmail() {
+        return sectionType.isWebOnly();
+    }
+
     void printForWordpress(final PrintWriter writer) {
-        if (!sectionType.isEmailOnly()) {
-            writeSectionTitle(writer);
-            for (final Item item : items) {
-                item.printForWordpress(writer, sectionType.isAccordion());
-            }
+        writeSectionTitle(writer);
+        for (final Item item : items) {
+            item.printForWordpress(writer, sectionType.isAccordion());
         }
     }
 
@@ -43,11 +49,9 @@ class Section {
     }
 
     void printForEmail(final PrintWriter writer, final boolean isWhiteBackground, final String newsletterLink) {
-        if (!sectionType.isWebOnly()) {
-            writeSectionTitleForEmail(writer, isWhiteBackground);
-            for (final Item item : items) {
-                item.printForEmail(writer, isWhiteBackground, getLinkWithAnchor(newsletterLink));
-            }
+        writeSectionTitleForEmail(writer, isWhiteBackground);
+        for (final Item item : items) {
+            item.printForEmail(writer, isWhiteBackground, getLinkWithAnchor(newsletterLink));
         }
     }
 

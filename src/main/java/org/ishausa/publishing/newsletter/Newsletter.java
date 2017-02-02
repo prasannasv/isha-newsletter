@@ -36,7 +36,9 @@ class Newsletter {
         writer.println("[su_accordion]");
 
         for (final Section section : sections) {
-            section.printForWordpress(writer);
+            if (!section.shouldSkipForWeb()) {
+                section.printForWordpress(writer);
+            }
         }
 
         writer.println("[/su_accordion]");
@@ -57,8 +59,10 @@ class Newsletter {
         final String newsletterLink = getWordpressLink();
         boolean isWhiteBackground = true;
         for (final Section section : sections) {
-            section.printForEmail(writer, isWhiteBackground, newsletterLink);
-            isWhiteBackground = !isWhiteBackground;
+            if (!section.shouldSkipForEmail()) {
+                section.printForEmail(writer, isWhiteBackground, newsletterLink);
+                isWhiteBackground = !isWhiteBackground;
+            }
         }
 
         writer.print(SoyRenderer.INSTANCE.renderResponsiveEmail(SoyRenderer.EmailTemplate.FOOTER_LOGO_AND_UNSUBSCRIBE,

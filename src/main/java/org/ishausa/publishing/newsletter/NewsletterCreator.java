@@ -75,15 +75,14 @@ class NewsletterCreator {
                           final List<String> fullContents,
                           final List<String> summaryContents) {
 
-        if (fullContents != null && titles != null) {
-            for (int i = 0; i < titles.size(); ++i) {
-                final String title = titles.get(i);
-                final String fullContent = fullContents.get(i);
+        final int size = titles != null ? titles.size() : (summaryContents != null ? summaryContents.size() : 0);
+        if (fullContents != null || titles != null || summaryContents != null) {
+            for (int i = 0; i < size; ++i) {
+                final String title = titles != null && titles.size() > i ? titles.get(i) : "";
+                final String fullContent = fullContents != null && fullContents.size() > i ? fullContents.get(i) : "";
                 final String summaryContent = summaryContents != null ? summaryContents.get(i) : fullContent;
 
-                if (!Strings.isNullOrEmpty(title) && !Strings.isNullOrEmpty(fullContent)) {
-                    section.addItem(new Item(title, fullContent, summaryContent));
-                }
+                section.addItem(new Item(Strings.nullToEmpty(title), Strings.nullToEmpty(fullContent), Strings.nullToEmpty(summaryContent)));
             }
         }
     }

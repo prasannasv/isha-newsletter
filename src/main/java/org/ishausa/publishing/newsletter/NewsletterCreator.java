@@ -82,7 +82,12 @@ class NewsletterCreator {
                 final String fullContent = fullContents != null && fullContents.size() > i ? fullContents.get(i) : "";
                 final String summaryContent = summaryContents != null ? summaryContents.get(i) : fullContent;
 
-                section.addItem(new Item(Strings.nullToEmpty(title), Strings.nullToEmpty(fullContent), Strings.nullToEmpty(summaryContent)));
+                if (!Strings.isNullOrEmpty(title) || section.hasNoTitle()) {
+                    section.addItem(
+                        new Item(Strings.nullToEmpty(title),
+                                 Strings.nullToEmpty(fullContent),
+                                 Strings.nullToEmpty(summaryContent)));
+                }
             }
         }
     }

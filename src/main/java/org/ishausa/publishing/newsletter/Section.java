@@ -35,6 +35,10 @@ class Section {
         return sectionType.isWebOnly();
     }
 
+    boolean hasNoTitle() {
+        return sectionType.hasNoTitle();
+    }
+
     void printForWordpress(final PrintWriter writer) {
         writeSectionTitle(writer);
         for (final Item item : items) {

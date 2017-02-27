@@ -84,7 +84,8 @@ class NewsletterCreator {
 
                 if (!Strings.isNullOrEmpty(title) || section.hasNoTitle()) {
                     section.addItem(
-                        new Item(Strings.nullToEmpty(title),
+                        new Item(section,
+                                 Strings.nullToEmpty(title),
                                  Strings.nullToEmpty(fullContent),
                                  Strings.nullToEmpty(summaryContent)));
                 }

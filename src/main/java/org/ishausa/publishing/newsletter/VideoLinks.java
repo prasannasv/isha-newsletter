@@ -44,8 +44,8 @@ class VideoLinks {
         final String htmlSummary = SoyRenderer.INSTANCE.renderResponsiveEmail(
                 SoyRenderer.EmailTemplate.CONTENT_VIDEO, soyMapData);
 
-        final Item item = new Item("Unused", htmlContent, htmlSummary, true);
         final Section section = new Section(StandardSection.VIDEO);
+        final Item item = new Item(section, "Unused", htmlContent, htmlSummary, true);
         section.addItem(item);
 
         return section;
@@ -60,8 +60,8 @@ class VideoLinks {
             final String htmlContent = SoyRenderer.INSTANCE.renderWordpress(
                     SoyRenderer.WordpressTemplate.VIDEO_FACEBOOK, soyMapData);
 
-            final Item item = new Item("Unused", htmlContent, htmlContent, true);
             final Section section = new Section(StandardSection.VIDEO);
+            final Item item = new Item(section,"Unused", htmlContent, htmlContent, true);
             section.addItem(item);
 
             return section;

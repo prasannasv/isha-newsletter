@@ -5,6 +5,8 @@ import org.ishausa.publishing.newsletter.renderer.SoyRenderer;
 
 import javax.annotation.concurrent.Immutable;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An independent news item that belongs to a particular section.
@@ -13,21 +15,25 @@ import java.io.PrintWriter;
  */
 @Immutable
 class Item {
+    private final Section section;
     private final boolean isVideoItem;
     private final String title;
     private final String htmlContent;
     private final String htmlSummary;
 
-    Item(final String title,
+    Item(final Section section,
+         final String title,
          final String htmlContent,
          final String htmlSummary) {
-        this(title, htmlContent, htmlSummary, false);
+        this(section, title, htmlContent, htmlSummary, false);
     }
 
-    Item(final String title,
+    Item(final Section section,
+         final String title,
          final String htmlContent,
          final String htmlSummary,
          final boolean isVideoItem) {
+        this.section = section;
         this.title = title;
         this.htmlContent = htmlContent;
         this.htmlSummary = htmlSummary;
@@ -47,10 +53,14 @@ class Item {
         if (isVideoItem) {
             writer.println(htmlSummary);
         } else {
-            writer.println(SoyRenderer.INSTANCE.renderResponsiveEmail(SoyRenderer.EmailTemplate.CONTENT_STANDARD,
-                    ImmutableMap.of("contentHtml", htmlSummary,
-                            "isWhiteBackground", isBackgroundWhite,
-                            "readMoreLink", newsletterLink)));
+            final Map<String, Object> data = new HashMap<>();
+            data.put("contentHtml", htmlSummary);
+            data.put("isWhiteBackground", isBackgroundWhite);
+            final boolean shouldSkipReadMoreLink = section.shouldSkipForWeb() || htmlContent.equals(htmlSummary);
+            if (!shouldSkipReadMoreLink) {
+                data.put("readMoreLink", newsletterLink);
+            }
+            writer.println(SoyRenderer.INSTANCE.renderResponsiveEmail(SoyRenderer.EmailTemplate.CONTENT_STANDARD, data));
         }
     }
 }

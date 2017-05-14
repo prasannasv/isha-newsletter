@@ -16,12 +16,8 @@ import java.util.Set;
  */
 public enum StandardSection {
 
-    /*
-     * The names here have a reference in the publishing_tool.soy in lower case.
-     * If you rename this, be sure to update there as well.
-     */
     VIDEO("Video", "video", Tag.NON_ACCORDION, Tag.EMAIL_AND_WEB_SAME),
-    FEATURE_ARTICLE("Feature Article", "article"),
+    FEATURED_ARTICLE("Featured Article", "article"),
     PROGRAM_HIGHLIGHT("Program Highlight", "program_highlight"),
     PROGRAMS("Program Schedule", "programs", Tag.WEB_ONLY),
     ABODE_HAPPENINGS("Abode Happenings", "abode"),

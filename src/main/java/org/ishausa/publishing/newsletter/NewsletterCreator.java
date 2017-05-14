@@ -93,7 +93,7 @@ class NewsletterCreator {
         }
     }
 
-    private Map<String, List<String>> parseContentToMap(final String postBody) throws Exception {
+    public Map<String, List<String>> parseContentToMap(final String postBody) throws Exception {
         final Map<String, List<String>> paramsMap = new HashMap<>();
 
         for (final String keyValuePair : postBody.split("&")) {

@@ -12,6 +12,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import static spark.Spark.exception;
@@ -29,15 +31,16 @@ public class PublishingTool {
 
     private static final NewsletterCreator NEWSLETTER_CREATOR = new NewsletterCreator();
 
+    private static final String CONTENT_FILE_NAME = "content.txt";
     private static final String WORDPRESS_FILE_NAME = "wordpress.html";
     private static final String EMAIL_FILE_NAME = "email.html";
 
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws Exception {
         port(Integer.parseInt(System.getenv("PORT")));
         staticFiles.location("/static");
 
         get("/", (req, res) ->
-                SoyRenderer.INSTANCE.render(SoyRenderer.PublishingToolTemplate.INDEX, StandardSection.getSoyMapData()));
+                SoyRenderer.INSTANCE.render(SoyRenderer.PublishingToolTemplate.INDEX, buildIndexDataMap()));
 
         get(WORDPRESS_FILE_NAME, (req, res) -> IOUtils.toString(new FileInputStream(new File(WORDPRESS_FILE_NAME))));
         get(EMAIL_FILE_NAME, (req, res) -> IOUtils.toString(new FileInputStream(new File(EMAIL_FILE_NAME))));
@@ -51,27 +54,43 @@ public class PublishingTool {
         }));
     }
 
+    private static Map<String, ?> buildIndexDataMap() throws Exception {
+        final Map<String, ?> indexDataMap;
+
+        final File contentFile = new File(CONTENT_FILE_NAME);
+        if (contentFile.exists()) {
+            final String content = IOUtils.toString(new FileInputStream(contentFile));
+            final Map<String, List<String>> contentDataMap = NEWSLETTER_CREATOR.parseContentToMap(content);
+            indexDataMap = StandardSection.getSoyMapData(contentDataMap);
+            log.info("Built index data map with saved contents as: " + indexDataMap);
+        } else {
+            indexDataMap = StandardSection.getSoyMapData();
+        }
+
+        return indexDataMap;
+    }
+
     private static String handlePost(final Request request, final Response response) throws Exception {
         final String content = request.body();
+        final File contentFile = new File(CONTENT_FILE_NAME);
+        try (final PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(contentFile)))) {
+            writer.println(content);
+        }
 
         // Build the Newsletter from the paramsMap by building out each section
         final Newsletter newsletter = NEWSLETTER_CREATOR.parseToNewsletter(content);
 
         // Dump the html content of the Newsletter for wordpress
         final File wordpressFile = new File(WORDPRESS_FILE_NAME);
-        {
-            final PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(wordpressFile)));
+        try (final PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(wordpressFile)))) {
             newsletter.printForWordpress(writer);
-            writer.close();
         }
         log.info("Wordpress html written to " + wordpressFile.getAbsolutePath());
 
         // Dump it for email
         final File emailFile = new File(EMAIL_FILE_NAME);
-        {
-            final PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(emailFile)));
+        try (final PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(emailFile)))) {
             newsletter.printForEmail(writer);
-            writer.close();
         }
         log.info("Email html written to " + emailFile.getAbsolutePath());
 

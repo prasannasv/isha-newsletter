@@ -2,6 +2,7 @@
 /**
  * Newsletter Publishing Tool Home Page.
  *
+ * @param metadata - a map of newsletter metadata like title and date.
  * @param standardSections - list of standardSection.
  *  where standardSection -> {name: string, heading: string, hasNoTitle: bool, isEmailOnly: bool, isWebOnly: bool, isEmailAndWebSame: bool}
  */
@@ -50,22 +51,22 @@
       <div class="starter-template">
         <form action="/" method="POST">
             <h2>Newsletter Meta Info</h2>
-            <label>Title: </label><input type="text" name="title">
-            <label>Date: </label><input type="text" name="date" placeholder="yyyy-mm-dd">
+            <label>Title: </label><input type="text" name="title" value="{$metadata['title']}">
+            <label>Date: </label><input type="text" name="date" value="{$metadata['date']}">
             <hr>
 
             {foreach $standardSection in $standardSections}
               <h2>{$standardSection['heading']}</h2>
               {if not $standardSection['hasNoTitle']}
-                <label>Title: </label><input type="text" name="{$standardSection['name']}-title" placeholder="{$standardSection['heading']}">
+                <label>Title: </label><input type="text" name="{$standardSection['name']}-title" value="{$standardSection['title']}">
               {/if}
 
               {if not $standardSection['isWebOnly'] and not $standardSection['isEmailAndWebSame']}
-                <textarea name="{$standardSection['name']}-summary">Paste the email contents here</textarea>
+                <textarea name="{$standardSection['name']}-summary">{$standardSection['summary']}</textarea>
               {/if}
 
               {if not $standardSection['isEmailOnly']}
-                <textarea name="{$standardSection['name']}-full">Paste the full contents here</textarea>
+                <textarea name="{$standardSection['name']}-full">{$standardSection['full']}</textarea>
               {/if}
               <hr>
             {/foreach}

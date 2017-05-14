@@ -2,10 +2,12 @@ package org.ishausa.publishing.newsletter;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.template.soy.data.SoyListData;
+import com.google.template.soy.data.SoyMapData;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -81,7 +83,7 @@ public enum StandardSection {
     }
 
     // {name: string, heading: string, hasNoTitle: bool, isEmailOnly: bool, isWebOnly: bool, isEmailAndWebSame: bool}
-    private Map<String, ?> toSoyRecord() {
+    private Map<String, ?> toSoyRecord(final String title, final String summary, final String full) {
         final Map<String, Object> map = new HashMap<>();
 
         map.put("name", toString().toLowerCase());
@@ -90,17 +92,44 @@ public enum StandardSection {
         map.put("isEmailOnly", isEmailOnly());
         map.put("isWebOnly", isWebOnly());
         map.put("isEmailAndWebSame", isEmailAndWebSame());
+        map.put("title", title);
+        map.put("summary", summary);
+        map.put("full", full);
 
         return map;
     }
 
     public static Map<String, ?> getSoyMapData() {
+        return getSoyMapData(new HashMap<>());
+    }
+
+    public static Map<String, ?> getSoyMapData(final Map<String, List<String>> priorContents) {
+        //Newsletter metadata
+        final SoyMapData metadata = new SoyMapData();
+        metadata.put("title", getFirstOrDefault(priorContents, "title", "Newsletter Title"));
+        metadata.put("date", getFirstOrDefault(priorContents, "date", "yyyy-mm-dd"));
+
+        //Newsletter section data
         final SoyListData soyListData = new SoyListData();
 
         for (final StandardSection section : values()) {
-            soyListData.add(section.toSoyRecord());
+            final String title = getFirstOrDefault(priorContents,
+                    section.toString().toLowerCase() + "-title", section.getHeading());
+            final String summary = getFirstOrDefault(priorContents,
+                    section.toString().toLowerCase() + "-summary", "Paste email contents here");
+            final String fullContents = getFirstOrDefault(priorContents,
+                    section.toString().toLowerCase() + "-full", "Paste full contents here");
+            soyListData.add(section.toSoyRecord(title, summary, fullContents));
         }
 
-        return ImmutableMap.of("standardSections", soyListData);
+        return ImmutableMap.of("metadata", metadata,
+                "standardSections", soyListData);
+    }
+
+    private static String getFirstOrDefault(final Map<String, List<String>> priorContents,
+                                            final String key,
+                                            final String defaultValue) {
+        final List<String> values = priorContents.get(key);
+        return values != null && values.size() > 0 ? values.get(0) : defaultValue;
     }
 }

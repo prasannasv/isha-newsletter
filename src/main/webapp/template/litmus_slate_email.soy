@@ -243,16 +243,11 @@
  *
  * @param sectionTitle - the content for this section.
  * @param isWhiteBackground - the background color for this section. #FFFFFF, if true and #F9F7F5, otherwise.
- * @param readMoreLink - link to the actual newsletter for this section.
  */
 {template .contentSectionTitle}
     <tr>
         <td bgcolor="{if $isWhiteBackground}#FFFFFF{else}#F9F7F5{/if}" align="center" style="padding: 5px 5px 5px 5px;" class="section-padding">
-            {if isNonnull($readMoreLink)}
-                <a href="{$readMoreLink}" target="_blank"><h1 style="font-size: 24px; font-family: Georgia, serif; color: #26338C; text-decoration: none">{$sectionTitle}</h1></a>
-            {else}
-                <h1 style="font-size: 24px; font-family: Georgia, serif; color: #26338C">{$sectionTitle}</h1>
-            {/if}
+            <h1 style="font-size: 24px; font-family: Georgia, serif; color: #26338C">{$sectionTitle}</h1>
         </td>
     </tr>
 {/template}

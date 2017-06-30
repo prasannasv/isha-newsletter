@@ -54,7 +54,7 @@ class Section {
 
     void printForEmail(final PrintWriter writer, final boolean isWhiteBackground, final String newsletterLink) {
         if (!hasNoTitle()) {
-            writeSectionTitleForEmail(writer, isWhiteBackground, getLinkWithAnchor(newsletterLink));
+            writeSectionTitleForEmail(writer, isWhiteBackground);
         }
         for (final Item item : items) {
             item.printForEmail(writer, isWhiteBackground, getLinkWithAnchor(newsletterLink));
@@ -62,12 +62,10 @@ class Section {
     }
 
     private void writeSectionTitleForEmail(final PrintWriter writer,
-                                           final boolean isWhiteBackground,
-                                           final String newsletterLink) {
+                                           final boolean isWhiteBackground) {
         writer.println(SoyRenderer.INSTANCE.renderResponsiveEmail(SoyRenderer.EmailTemplate.CONTENT_SECTION_TITLE,
                 ImmutableMap.of("sectionTitle", sectionType.getHeading(),
-                        "isWhiteBackground", isWhiteBackground,
-                        "readMoreLink", newsletterLink)));
+                        "isWhiteBackground", isWhiteBackground)));
     }
 
     private String getLinkWithAnchor(final String newsletterLink) {

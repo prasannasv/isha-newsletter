@@ -49,7 +49,7 @@
         /* ALLOWS FOR FLUID TABLES */
         .wrapper {
           width: 100% !important;
-        	max-width: 100% !important;
+            max-width: 100% !important;
         }
 
         /* ADJUSTS LAYOUT OF LOGO IMAGE */
@@ -155,8 +155,8 @@
                             <img alt="Isha Logo" src="http://isha.sadhguru.org/us-en/wp-content/uploads/2016/08/Isha_logo-2x.png" width="60" height="60" style="display: block; font-family: Georgia, serif; color: #ffffff; font-size: 16px;" border="0">
                         </a>
                     </td>
-					<td align="center" style="font-size: 20px; font-weight: bold; font-family: Georgia, serif; color: #333333; padding-top: 10px; padding-left: 5px" class="padding">{$title}</td>
-					<td align="center" style="font-size: 24px; font-family: Georgia, serif; color: #333333; padding-top: 10px;" class="padding">National Newsletter</td></tr>
+                    <td align="center" style="font-size: 20px; font-weight: bold; font-family: Georgia, serif; color: #26338C; padding-top: 10px; padding-left: 5px" class="padding">{$title}</td>
+                    <td align="center" style="font-size: 24px; font-family: Georgia, serif; color: #26338C; padding-top: 10px;" class="padding">National Newsletter</td></tr>
                 </tr>
             </table>
             <!--[if (gte mso 9)|(IE)]>
@@ -166,7 +166,7 @@
             <![endif]-->
         </td>
     </tr>
-	<tr>
+    <tr>
         <td bgcolor="#E9E0D8" align="center">
             <!--[if (gte mso 9)|(IE)]>
             <table align="center" border="0" cellspacing="0" cellpadding="0" width="500">
@@ -176,7 +176,9 @@
             <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px;" class="wrapper">
                 <tr>
                     <td align="right" valign="top" style="padding-right: 15px; padding-bottom: 5px;">
-					<a href="#SPCLICKTOVIEW" name="BrowserView" style="color: rgb(96, 96, 96); font-family: Georgia, serif; font-size: 11px; line-height: 100%; word-wrap: break-word; font-weight: normal; text-decoration: underline;" target="_blank" xt="SPCLICKTOVIEW">View this email in your browser</a>
+                        <a href="#SPCLICKTOVIEW" name="BrowserView"
+                        style="color: rgb(96, 96, 96); font-family: Georgia, serif; font-size: 11px; line-height: 100%; word-wrap: break-word; font-weight: normal; text-decoration: underline;"
+                        target="_blank" xt="SPCLICKTOVIEW">View this email in your browser</a>
                     </td>
                 </tr>
             </table>
@@ -210,10 +212,10 @@
                         <!-- VIDEO IMAGE -->
                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                             <tr>
-                              	<td class="padding" align="center">
-	                                <a href="{$newsletterLink}" target="_blank">
-									    <img align="middle" border="0" src="http://img.youtube.com/vi/{$videoId}/hqdefault.jpg" width="500" xt="SPIMAGE" />
-								    </a>
+                                  <td class="padding" align="center">
+                                    <a href="{$newsletterLink}" target="_blank">
+                                        <img align="middle" border="0" src="http://img.youtube.com/vi/{$videoId}/hqdefault.jpg" width="500" />
+                                    </a>
                                 </td>
                             </tr>
                         </table>
@@ -241,11 +243,16 @@
  *
  * @param sectionTitle - the content for this section.
  * @param isWhiteBackground - the background color for this section. #FFFFFF, if true and #F9F7F5, otherwise.
+ * @param readMoreLink - link to the actual newsletter for this section.
  */
 {template .contentSectionTitle}
     <tr>
         <td bgcolor="{if $isWhiteBackground}#FFFFFF{else}#F9F7F5{/if}" align="center" style="padding: 5px 5px 5px 5px;" class="section-padding">
-            <h1 style="font-size: 24px; font-family: Georgia, serif;">{$sectionTitle}</h1>
+            {if isNonnull($readMoreLink)}
+                <a href="{$readMoreLink}" target="_blank"><h1 style="font-size: 24px; font-family: Georgia, serif; color: #26338C; text-decoration: none">{$sectionTitle}</h1></a>
+            {else}
+                <h1 style="font-size: 24px; font-family: Georgia, serif; color: #26338C">{$sectionTitle}</h1>
+            {/if}
         </td>
     </tr>
 {/template}
@@ -287,7 +294,11 @@
                                             <td align="center" style="padding-top: 0px;" class="padding">
                                                 <table border="0" cellspacing="0" cellpadding="0" class="mobile-button-container">
                                                     <tr>
-                                                    	<td align="center" style="border-radius: 3px;" bgcolor="#256F9C"><a href="{$readMoreLink}" target="_blank" style="font-size: 16px; font-family: Georgia, serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; border-radius: 3px; padding: 15px 25px; border: 1px solid #256F9C; display: inline-block;" class="mobile-button">Read More &rarr;</a></td>
+                                                        <td align="center" style="border-radius: 3px;" bgcolor="#D24B23">
+                                                            <a href="{$readMoreLink}" target="_blank"
+                                                            style="font-size: 16px; font-family: Georgia, serif; color: #ffffff; text-decoration: none; border-radius: 3px; padding: 15px 25px; display: inline-block;"
+                                                            class="mobile-button">READ MORE</a>
+                                                        </td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -322,8 +333,8 @@
             <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="max-width: 500px;" class="responsive-table">
                 <tr>
                     <td align="center" style="font-size: 12px; line-height: 18px; font-family: Georgia, serif; color:#666666;">
-					    &copy; Isha Foundation, Inc. Terms and Conditions. All rights reserved.
-						<br>
+                        &copy; Isha Foundation, Inc. Terms and Conditions. All rights reserved.
+                        <br>
                         951 Isha Ln, McMinnville, TN 37110
                         <br>
                         <a href="#SPCUSTOMOPTOUT" target="_blank" style="color: #666666; text-decoration: none;" xt="SPCUSTOMOPTOUT">Unsubscribe</a>
